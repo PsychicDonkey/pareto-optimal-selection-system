@@ -375,7 +375,7 @@ footer ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; max-width: 9
         <div class="answer-item"><span class="n">1 &middot; Solves the problem for the user</span>
           <p>Before the intake, the assessment designer sees how much hiring quality each option gives up for fairer outcomes. The choice becomes explicit, with a record to justify it under the Employment Equity Act.</p></div>
         <div class="answer-item"><span class="n">2 &middot; How it works</span>
-          <p>Pick the assessments. The optimisation engine, which is the AI in the tool, finds the best weighting for every possible trade-off and draws them as a frontier. Choose a point, then score real applicants.</p></div>
+          <p>Pick the assessments. The optimisation engine, which is the AI in the tool, finds the best weighting for every possible trade-off and draws them as a frontier. Choose a point, then score real applicants. This is the demonstration.</p></div>
         <div class="answer-item"><span class="n">3 &middot; How we know it works</span>
           <p>It reproduces the published results of De Corte et al. (2007) and Berry et al. (2024) to within .01. The Checks tab shows the comparison.</p></div>
       </div>
@@ -568,7 +568,12 @@ footer ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; max-width: 9
           <div class="table-scroll"><table class="param-table" id="param-table"></table></div>
           <p class="small muted">d is the reference-group mean minus the focal-group mean in within-group SD units. Validities and correlations are within-group. Edit the lower triangle; the upper triangle mirrors it. Rows for predictors outside the battery are dimmed but still checked.</p>
           <ul class="notes" id="param-errors" aria-live="polite"></ul>
-          <div class="btn-row"><button type="button" id="restore">Restore preset values</button></div>
+          <div class="btn-row">
+            <button type="button" id="restore">Restore preset values</button>
+            <button type="button" class="scn" data-scn="gma-r">Local GMA validity (.45)</button>
+            <button type="button" class="scn" data-scn="gma-d">Smaller GMA d (.40)</button>
+            <button type="button" class="scn" data-scn="ws-local">Local work sample (r .45, d .35)</button>
+          </div>
         </div>
       </details>
     </section>
@@ -1259,6 +1264,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = PO;
     $('#preset').value = id;
     $$('input[name="measure"]').forEach((r) => { r.checked = r.value === S.measure; });
     buildParamTable();
+    $$('.scn').forEach((b) => { b.disabled = S.presetId !== 'berry'; });
     fillDesignInputs();
     compute();
     const eq = S.sel.map(() => 1 / S.sel.length);
@@ -1782,12 +1788,27 @@ if (typeof module !== 'undefined' && module.exports) module.exports = PO;
     const edited = JSON.stringify(S.model) !== JSON.stringify(modelFromPreset(presetById(S.presetId)));
     $('#params-pill').innerHTML = errs.length ? pill('bad', 'Invalid, not applied') : edited ? pill('warn', 'Edited values applied') : pill('good', 'Preset values');
   }
+  // Matrix-only scenarios: each starts from the preset values and overwrites a few cells.
+  const SCENARIOS = {
+    'gma-r': { r: { GMA: 0.45 } },
+    'gma-d': { d: { GMA: 0.40 } },
+    'ws-local': { r: { WS: 0.45 }, d: { WS: 0.35 } }
+  };
+  function applyScenario(id) {
+    const sc = SCENARIOS[id]; if (!sc) return;
+    S.draft = modelFromPreset(presetById(S.presetId));
+    ['r', 'd'].forEach((key) => Object.entries(sc[key] || {}).forEach(([code, v]) => {
+      const i = S.draft.codes.indexOf(code); if (i >= 0) S.draft[key][i] = v;
+    }));
+    fillParamTable(); onDraftChange(); renderSjtBoxState();
+  }
   function bindParams() {
     $('#param-table').addEventListener('input', () => { onDraftChange(); renderSjtBoxState(); });
     ['#p-pf', '#p-s', '#p-dy'].forEach((s) => $(s).addEventListener('input', onDraftChange));
     $('#restore').addEventListener('click', () => {
       S.draft = modelFromPreset(presetById(S.presetId)); fillParamTable(); fillDesignInputs(); onDraftChange(); renderSjtBox();
     });
+    $$('.scn').forEach((b) => b.addEventListener('click', () => applyScenario(b.dataset.scn)));
   }
   function renderSjtBoxState() { const cb = $('#sjt-app'); if (cb) { const i = S.draft.codes.indexOf('SJT'); cb.checked = Math.abs(S.draft.d[i] - 0.66) < 1e-9; } }
 
