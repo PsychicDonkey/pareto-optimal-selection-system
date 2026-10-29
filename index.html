@@ -405,31 +405,6 @@ footer ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; max-width: 9
       <p>The values are mostly US meta-analytic estimates and are suitable for simulation only. Section 8 of the Employment Equity Act requires that assessments be shown to be valid and reliable, applied fairly and not biased against any employee or group. Real use requires South African validation studies, local norms or South African meta-analytic evidence (see Theron, 2009).</p>
     </div>
 
-    <div class="split">
-      <div class="panel stack">
-        <h3>Live demo: three moves</h3>
-        <ol class="demo-steps">
-          <li><span><b>Change the battery.</b> Add or drop an assessment, for example drop cognitive ability, and watch the frontier move.</span></li>
-          <li><span><b>Choose a trade-off.</b> Set the adverse impact threshold, or click a point on the frontier, and read what that option costs.</span></li>
-          <li><span><b>Score an applicant file.</b> Load the example pool and show who would be hired, by group, under the chosen weights.</span></li>
-        </ol>
-      </div>
-      <div class="panel stack">
-        <h3>What changed from previous versions</h3>
-        <ul class="prose" style="padding-left:18px">
-          <li>A predictor library of up to seven assessments, any two or more of which can form the battery.</li>
-          <li>An exact optimiser replaces the grid search, so the frontier is precise for any battery size.</li>
-          <li>Focal and reference groups replace minority and majority, with a 60% focal default.</li>
-          <li>An adjustable adverse impact threshold instead of a fixed four-fifths line.</li>
-          <li>Click anywhere in the trade-off chart; dominated weightings show what they leave on the table.</li>
-          <li>Raw-score uploads with an editable norm table.</li>
-          <li>A second known-answer test against Berry et al. (2024) Table 5, run at the design values the paper prints.</li>
-          <li>Applicant files are checked for ties at the cut-off, reverse-keyed columns and norms that do not fit the pool.</li>
-          <li>Configuration stress tests across every battery, battery size and extreme design setting.</li>
-        </ul>
-      </div>
-    </div>
-
     <div class="callout info">
       <h3>Extension: other group comparisons</h3>
       <p>Gender (men&ndash;women) comparisons are a natural extension, but published men&ndash;women d values across these predictors are patchy, so the tool models Black&ndash;White differences only. The engine supports any two-group comparison once defensible d values exist.</p>
@@ -2528,7 +2503,6 @@ if (typeof module !== 'undefined' && module.exports) module.exports = PO;
     S.tab = name;
     $$('.tabs button').forEach((b) => b.setAttribute('aria-selected', String(b.dataset.tab === name)));
     $$('.tabpanel').forEach((p) => { p.hidden = p.id !== 'tab-' + name; });
-    try { localStorage.setItem('pareto-v2-tab', name); } catch (e) { /* storage unavailable */ }
     if (name === 'dashboard' && S.ctx) { layoutTradeoff(); drawCloud(); update(); }
     if (name === 'checks' && S.checksStale) runChecks();
   }
@@ -2543,6 +2517,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = PO;
 
   // ---------- Wire up ----------
   function init() {
+    $('#gloss-q').value = ''; // browsers can restore typed text on reload
     buildGlossary(); bindTabs(); buildPresetSelect(); bindParams(); bindTradeoff(); bindWeights();
     $('#thr').value = S.thr; $('#thr-out').textContent = fmtP(S.thr);
     $('#thr').addEventListener('input', (e) => { S.thr = +e.target.value; $('#thr-out').textContent = fmtP(S.thr); renderScenario(); if (isVisible()) { layoutTradeoff(); drawCloud(); } schedule(); });
@@ -2561,9 +2536,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = PO;
     new MutationObserver(() => { if (isVisible()) drawCloud(); }).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
     loadPreset('berry');
     renderScoringEmpty();
-    let tab = 'overview';
-    try { const t = localStorage.getItem('pareto-v2-tab'); if (['overview', 'glossary', 'dashboard', 'checks'].includes(t)) tab = t; } catch (e) { /* storage unavailable */ }
-    showTab(tab);
+    // Always open on the Overview tab, at the top of the page, with the default preset loaded.
+    try { if ('scrollRestoration' in history) history.scrollRestoration = 'manual'; } catch (e) { /* older browsers */ }
+    showTab('overview');
+    window.scrollTo(0, 0);
   }
   // Exposed for testing in the browser console.
   window.PSP = { S, CK, loadPool, scorePool, parseWeight, canToggle, showTab, setWeights, effW, current, runChecks };
