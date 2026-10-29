@@ -4,8 +4,6 @@ A decision-support tool for the validity–diversity trade-off in personnel sele
 
 **Live tool:** https://psychicdonkey.github.io/pareto-optimal-selection-system/
 
-Built for AI in IOP, Assignment 2 ("Build It"), Section of Organisational Psychology, University of Cape Town, 2026.
-
 ## Who it is for
 
 The I-O psychologist or talent assessment lead at a large South African employer who designs the assessment battery for a high-volume intake (graduate programmes, learnerships, branch or contact-centre roles), and who must be able to defend that battery under Section 8 of the Employment Equity Act.
