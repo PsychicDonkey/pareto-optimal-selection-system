@@ -375,7 +375,7 @@ footer ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; max-width: 9
         <div class="answer-item"><span class="n">1 &middot; Solves the problem for the user</span>
           <p>Before the intake, the assessment designer sees how much hiring quality each option gives up for fairer outcomes. The choice becomes explicit, with a record to justify it under the Employment Equity Act.</p></div>
         <div class="answer-item"><span class="n">2 &middot; How it works</span>
-          <p>Pick the assessments. The optimisation engine, which is the AI in the tool, finds the best weighting for every possible trade-off and draws them as a frontier. Choose a point, then score real applicants.</p></div>
+          <p>Pick the assessments. The optimisation engine, which is the AI in the tool, finds the best weighting for every possible trade-off and draws them as a frontier. Choose a point, then score real applicants. This is the demonstration.</p></div>
         <div class="answer-item"><span class="n">3 &middot; How we know it works</span>
           <p>It reproduces the published results of De Corte et al. (2007) and Berry et al. (2024) to within .01. The Checks tab shows the comparison.</p></div>
       </div>
@@ -423,7 +423,9 @@ footer ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; max-width: 9
           <li>An adjustable adverse impact threshold instead of a fixed four-fifths line.</li>
           <li>Click anywhere in the trade-off chart; dominated weightings show what they leave on the table.</li>
           <li>Raw-score uploads with an editable norm table.</li>
-          <li>A second known-answer test against Berry et al. (2024) Table 5.</li>
+          <li>A second known-answer test against Berry et al. (2024) Table 5, run at the design values the paper prints.</li>
+          <li>Applicant files are checked for ties at the cut-off, reverse-keyed columns and norms that do not fit the pool.</li>
+          <li>Configuration stress tests across every battery, battery size and extreme design setting.</li>
         </ul>
       </div>
     </div>
@@ -571,6 +573,7 @@ footer ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; max-width: 9
           <div class="btn-row">
             <button type="button" id="restore">Restore preset values</button>
             <button type="button" class="scn" data-scn="gma-r">Local GMA validity (.45)</button>
+            <button type="button" class="scn" data-scn="gma-23">21st-century GMA validity (.23)</button>
             <button type="button" class="scn" data-scn="gma-d">Smaller GMA d (.40)</button>
             <button type="button" class="scn" data-scn="ws-local">Local work sample (r .45, d .35)</button>
           </div>
@@ -584,7 +587,7 @@ footer ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; max-width: 9
     <div class="check-head">
       <div class="panel-head" style="margin-bottom:0">
         <h2>Checks</h2>
-        <p>Everything that exists to verify the results: two known-answer tests against published tables, cross-checks of the optimiser, matrix validity, simulation against the analytic model, and edge cases. Checks 3 to 7 use the battery and weights currently set on the Dashboard.</p>
+        <p>Everything that exists to verify the results: two known-answer tests against published tables, cross-checks of the optimiser, matrix validity, simulation against the analytic model, edge cases including hand-scored pools, and configuration stress tests. Checks 3 to 8 use the battery and weights currently set on the Dashboard; checks 1, 2 and 9 use fixed preset values.</p>
       </div>
       <button type="button" id="rerun-checks">Re-run all checks</button>
     </div>
@@ -609,7 +612,7 @@ footer ul { margin: 0; padding-left: 18px; display: grid; gap: 4px; max-width: 9
       <p>Berry, C. M., Lievens, F., Zhang, C., &amp; Sackett, P. R. (2024). Insights from an updated personnel selection meta-analytic matrix: Revisiting general mental ability tests&rsquo; role in the validity&ndash;diversity trade-off. <i>Journal of Applied Psychology, 109</i>(10), 1611&ndash;1634. https://doi.org/10.1037/apl0001203</p>
       <p>De Corte, W., Lievens, F., &amp; Sackett, P. R. (2007). Combining predictors to achieve optimal trade-offs between selection quality and adverse impact. <i>Journal of Applied Psychology, 92</i>(5), 1380&ndash;1393. https://doi.org/10.1037/0021-9010.92.5.1380</p>
       <p>Herde, C. N., Lievens, F., Jackson, D. J. R., Shalfrooshan, A., &amp; Roth, P. L. (2020). Subgroup differences in situational judgment test scores: Evidence from large applicant samples. <i>International Journal of Selection and Assessment, 28</i>(1), 45&ndash;54. https://doi.org/10.1111/ijsa.12269</p>
-      <p>McKay, P. F., &amp; McDaniel, M. A. (2006). A reexamination of Black&ndash;White mean differences in work performance: More data, more moderators. <i>Journal of Applied Psychology, 91</i>(3), 538&ndash;554.</p>
+      <p>Roth, P. L., Switzer, F. S., III, Van Iddekinge, C. H., &amp; Oh, I.-S. (2011). Toward better meta-analytic matrices: How input values can affect research conclusions in human resource management simulations. <i>Personnel Psychology, 64</i>(4), 899&ndash;935. https://doi.org/10.1111/j.1744-6570.2011.01231.x</p>
       <p>Sackett, P. R., Zhang, C., Berry, C. M., &amp; Lievens, F. (2022). Revisiting meta-analytic estimates of validity in personnel selection. <i>Journal of Applied Psychology, 107</i>(11), 2040&ndash;2068. https://doi.org/10.1037/apl0000994</p>
       <p>Sackett, P. R., Zhang, C., Berry, C. M., &amp; Lievens, F. (2023). Revisiting the design of selection systems in light of new findings regarding the validity of widely used predictors. <i>Industrial and Organizational Psychology, 16</i>(3).</p>
       <p>Song, Q. C., Tang, C., Newman, D. A., &amp; Wee, S. (2023). Adverse impact reduction and job performance optimization via Pareto-optimal weighting. <i>Journal of Applied Psychology, 108</i>(9), 1461&ndash;1485. https://doi.org/10.1037/apl0001085</p>
@@ -678,9 +681,9 @@ const PO = (function () {
         [0.42, 0.29, 0.23, 0.45, 0.16, 1],
         [0.20, 0.32, 0.10, 0.30, 0.05, 0.30, 1]
       ]),
-      dY: 0.27, pFocal: 0.60, s: 0.15, measure: 'validity',
+      dY: 0.38, pFocal: 0.60, s: 0.15, measure: 'validity',
       select: ['BIO', 'GMA', 'CON', 'SI'], hypothetical: ['WS'], sjtToggle: true,
-      note: 'Corrected (operational) validities and intercorrelations from Berry et al. (2024). The work sample row uses validity and d from Sackett et al. (2023) and invented correlations, to show how local values plug in. Criterion d of .27 is from McKay and McDaniel (2006); check against source.'
+      note: 'Corrected (operational) validities and intercorrelations from Berry et al. (2024). The work sample row uses validity and d from Sackett et al. (2023) and invented correlations, to show how local values plug in. Criterion d of .38 is the value Berry et al. (2024) use, from Roth et al. (2011); it affects the criterion-score view and the simulation, not the validity frontier.'
     },
     {
       id: 'decorte', name: 'De Corte et al. 2007 (original paper)',
@@ -743,7 +746,8 @@ const PO = (function () {
     { pt: 21, ai: .87, q: .35, w: [.00, .00, 1.00, .00] }
   ];
   // Berry et al. (2024) Table 5 (BIO, GMA, CON, SI, INT, SJT), the second known-answer test.
-  const TABLE5_DESIGN = { s: 0.20, pFocal: 0.20 };
+  // Design values as printed in Berry et al. (2024, p. 1618): minority proportion .15, selection ratio .20.
+  const TABLE5_DESIGN = { s: 0.20, pFocal: 0.15 };
   const TABLE5 = [
     [.61, .42, .20, .20, .00, .34, .26, .00], [.60, .48, .21, .14, .00, .37, .29, .00],
     [.59, .53, .20, .09, .01, .40, .30, .00], [.58, .58, .19, .05, .03, .41, .31, .00],
@@ -1285,7 +1289,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = PO;
     $('#p-s').value = Math.round(S.draft.s * 100);
     $('#p-dy').value = +S.draft.dY.toFixed(4);
     const p = presetById(S.presetId);
-    $('#p-dy-note').textContent = p.id === 'decorte' ? 'composite of 3×task + 1×context' : p.id === 'berry' ? 'McKay & McDaniel (2006); check' : 'performance';
+    $('#p-dy-note').textContent = p.id === 'decorte' ? 'composite of 3×task + 1×context' : p.id === 'berry' ? 'Roth et al. (2011), as in Berry et al.' : 'performance';
     $('#preset-note').textContent = p.note;
   }
   function buildPredList() {
@@ -1791,6 +1795,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = PO;
   // Matrix-only scenarios: each starts from the preset values and overwrites a few cells.
   const SCENARIOS = {
     'gma-r': { r: { GMA: 0.45 } },
+    'gma-23': { r: { GMA: 0.23 } }, // Griebe et al. (2022), as cited in Sackett et al. (2023)
     'gma-d': { d: { GMA: 0.40 } },
     'ws-local': { r: { WS: 0.45 }, d: { WS: 0.35 } }
   };
@@ -1908,9 +1913,53 @@ if (typeof module !== 'undefined' && module.exports) module.exports = PO;
       else if (nF + nR > 0 && Math.abs(nF / (nF + nR) - pFocal) > 0.05) notes.push({ cls: 'warn', html: `<b>Pool mix</b><span>${pct(nF / (nF + nR))} of this file is Focal, but the model assumes ${pct(pFocal)}. Set the focal share above to compare like with like.</span>` });
     }
     if (pool.hasPerf) notes.push({ cls: 'info', html: '<b>PERF</b><span>Performance is never used to rank anyone. It shows how the people hired would have performed, which only a simulated or historical file can provide.</span>' });
+    // Direction check: a reverse-keyed column correlates with the other predictors (and PERF)
+    // in the opposite direction to the model. Needs a pool large enough for the signs to mean something.
+    const rev = reverseKeyCheck(valid, sel, zcols, pool.hasPerf, S.model ? subModel(S.model, sel) : null);
+    rev.forEach((x) => notes.push({ cls: 'bad', html: `<b>${x.code} direction</b><span>${esc(x.msg)}</span>` }));
     const k = Math.max(1, Math.round(s * valid.length));
     const scored = valid.slice().sort((a, b) => (b.comp - a.comp) || (a.order - b.order));
-    return { valid, excluded, notes, zcols, stats, k, scored, cutoff: scored[k - 1].comp };
+    const cutoff = scored[k - 1].comp, TIE = 1e-9;
+    valid.forEach((r) => { r.tie = false; });
+    let ties = null;
+    if (scored.length > k && Math.abs(scored[k].comp - cutoff) <= TIE) {
+      const tied = scored.filter((r) => Math.abs(r.comp - cutoff) <= TIE);
+      const inSel = tied.filter((r) => scored.indexOf(r) < k).length;
+      ties = { n: tied.length, inSel, out: tied.length - inSel, ids: tied.map((r) => r.id) };
+      tied.forEach((r) => { r.tie = true; });
+      notes.unshift({ cls: 'bad', html: `<b>Tie at the cut-off</b><span>${int(ties.n)} applicants share the composite score at the cut-off. File order puts ${int(inSel)} of them inside the top ${int(k)} and ${int(ties.out)} outside, which has no psychological meaning. Decide these cases by a documented rule, for example selecting all of them or using a further assessment. They are marked as tied in the ranked table and the download: ${ties.ids.slice(0, 6).map(esc).join(', ')}${ties.ids.length > 6 ? ', and more' : ''}.</span>` });
+    }
+    return { valid, excluded, notes, zcols, stats, k, scored, cutoff, ties, reversed: rev };
+  }
+  function pearson(a, b) {
+    const n = a.length; if (n < 3) return NaN;
+    const ma = a.reduce((x, y) => x + y, 0) / n, mb = b.reduce((x, y) => x + y, 0) / n;
+    let sab = 0, saa = 0, sbb = 0;
+    for (let i = 0; i < n; i++) { sab += (a[i] - ma) * (b[i] - mb); saa += (a[i] - ma) ** 2; sbb += (b[i] - mb) ** 2; }
+    return saa > 0 && sbb > 0 ? sab / Math.sqrt(saa * sbb) : NaN;
+  }
+  // Flags a selected predictor when most of its clear model relationships (|r| >= .10) appear with the
+  // opposite sign in the pool. Requires at least 30 rows; small pools give unreliable signs.
+  function reverseKeyCheck(valid, sel, zcols, hasPerf, mm) {
+    if (!mm || valid.length < 30) return [];
+    const out = [];
+    const col = (i) => valid.map((r) => r.raw[sel[i]]);
+    const perf = hasPerf ? valid.map((r) => r.perf) : null, perfOk = perf && perf.every(isFinite);
+    sel.forEach((c, i) => {
+      if (!zcols[c].ok) return;
+      let elig = 0, flip = 0; const who = [];
+      sel.forEach((c2, j) => {
+        if (j === i || !zcols[c2].ok || Math.abs(mm.R[i][j]) < 0.10) return;
+        const o = pearson(col(i), col(j)); if (!isFinite(o)) return;
+        elig++; if (o * mm.R[i][j] < 0 && Math.abs(o) > 0.05) { flip++; who.push(`${c2} (model ${fmtP(mm.R[i][j])}, file ${fmtP(o)})`); }
+      });
+      if (perfOk && Math.abs(mm.r[i]) >= 0.10) {
+        const o = pearson(col(i), perf);
+        if (isFinite(o)) { elig++; if (o * mm.r[i] < 0 && Math.abs(o) > 0.05) { flip++; who.push(`PERF (model ${fmtP(mm.r[i])}, file ${fmtP(o)})`); } }
+      }
+      if (elig >= 2 && flip * 2 > elig) out.push({ code: c, msg: `${c} correlates in the opposite direction to the model with ${who.join(', ')}. The column may be reverse-keyed (a low raw score meaning a better result). Reverse-score it before uploading; as it stands, the composite rewards poor scores on ${c}.` });
+    });
+    return out;
   }
   function outcomesFor(pool, sel, zcols, w, s) {
     const valid = pool.scoredBase;
@@ -2062,10 +2111,10 @@ if (typeof module !== 'undefined' && module.exports) module.exports = PO;
     let body = '';
     for (let i = 0; i < show; i++) {
       const r = res.scored[i], picked = i < res.k;
-      body += `<tr class="${picked ? 'sel' : ''}${i === res.k - 1 ? ' cut' : ''}"><td>${i + 1}</td><td class="l txt">${esc(r.id)}</td><td>${fmtQ(r.comp, 3)}</td>${sel.map((c, j) => `<td class="gl">${r.raw[c]}</td><td>${fmtQ(r.z[j])}</td>`).join('')}${pool.hasGroup ? `<td class="l txt gl">${esc(r.graw)}</td>` : ''}${pool.hasPerf ? `<td>${isFinite(r.perf) ? r.perf : ''}</td>` : ''}<td class="l">${picked ? '<span class="yes">Yes</span>' : '<span class="muted txt">No</span>'}</td></tr>`;
+      body += `<tr class="${picked ? 'sel' : ''}${i === res.k - 1 ? ' cut' : ''}"><td>${i + 1}</td><td class="l txt">${esc(r.id)}</td><td>${fmtQ(r.comp, 3)}</td>${sel.map((c, j) => `<td class="gl">${r.raw[c]}</td><td>${fmtQ(r.z[j])}</td>`).join('')}${pool.hasGroup ? `<td class="l txt gl">${esc(r.graw)}</td>` : ''}${pool.hasPerf ? `<td>${isFinite(r.perf) ? r.perf : ''}</td>` : ''}<td class="l">${picked ? '<span class="yes">Yes</span>' : '<span class="muted txt">No</span>'}${r.tie ? ' <span class="badge">tied</span>' : ''}</td></tr>`;
     }
     html += `<div class="stack" style="gap:8px"><h3>Ranked applicants</h3>
-      <p class="small"><b>Cut-off: composite z = ${fmtQ(res.cutoff, 3)}.</b> <span class="muted">A weighted composite has no single raw-score scale, so the cut-off is reported in z units only. Ties at the cut-off are broken by file order.</span></p>
+      <p class="small"><b>Cut-off: composite z = ${fmtQ(res.cutoff, 3)}.</b> <span class="muted">A weighted composite has no single raw-score scale, so the cut-off is reported in z units only. ${res.ties ? `<b>${int(res.ties.n)} applicants are tied at the cut-off</b>; see the warning above.` : 'No applicants are tied at the cut-off.'}</span></p>
       <div class="table-scroll" style="max-height:440px"><table><thead>${head}</thead><tbody>${body}</tbody></table></div>
       ${show < res.scored.length ? `<div><button type="button" id="show-all">Show all ${int(res.scored.length)} applicants</button></div>` : ''}</div></div>`;
     $('#scoring-body').innerHTML = html;
@@ -2097,7 +2146,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = PO;
     const pad = (row) => { const r = row.slice(0, nCol); while (r.length < nCol) r.push(''); return r.map(q); };
     const fmtN = (v) => (d === ';' ? String(v).replace('.', ',') : String(v));
     const lines = [pad(pool.header).concat(sel.map((c) => 'Z_' + c), ['COMPOSITE_Z', 'RANK', 'SELECTED']).join(d)];
-    res.scored.forEach((r, i) => lines.push(pad(r.cells).concat(r.z.map((z) => fmtN(z.toFixed(4))), [fmtN(r.comp.toFixed(4)), i + 1, i < res.k ? 'Yes' : 'No']).join(d)));
+    res.scored.forEach((r, i) => lines.push(pad(r.cells).concat(r.z.map((z) => fmtN(z.toFixed(4))), [fmtN(r.comp.toFixed(4)), i + 1, (i < res.k ? 'Yes' : 'No') + (r.tie ? ' (tied at cut-off)' : '')]).join(d)));
     res.excluded.forEach((e) => lines.push(pad(e.r.cells).concat(sel.map(() => ''), ['', '', q('Excluded: ' + e.reason)]).join(d)));
     return lines.join('\r\n');
   }
@@ -2164,7 +2213,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = PO;
     }).join('');
     const sjt0 = f.every((q) => q.b[5] < 0.005);
     const ok = pass === 21 && sjt0;
-    const body = `<p class="small" style="max-width:85ch">Runs on the Berry et al. (2024) preset values with the six published predictors (work sample excluded, SJT d = .37), selection ratio 20% and focal share 20%. The paper does not print its design parameters; these values reproduce its published points. For each point the optimiser solves at the published AI ratio and compares composite validity and weights. Tolerance ${fmtP(tol)} on validity, ${fmtP(2 * tol)} on each weight. Largest gaps: validity ${mv.toFixed(3)}, weight ${mw.toFixed(3)}.</p>
+    const body = `<p class="small" style="max-width:85ch">Runs on the Berry et al. (2024) preset values with the six published predictors (work sample excluded, SJT d = .37), selection ratio 20% and focal share 15%, the design values printed in the paper (p. 1618). For each point the optimiser solves at the published AI ratio and compares composite validity and weights. Tolerance ${fmtP(tol)} on validity, ${fmtP(2 * tol)} on each weight. Largest gaps: validity ${mv.toFixed(3)}, weight ${mw.toFixed(3)}.</p>
       <p class="small" style="max-width:85ch">Recomputing validity and AI ratio directly from the published weights reproduces the table to within ${mr.toFixed(3)} and ${ma.toFixed(3)} (rounding of the printed weights), which also confirms the transcribed matrix. The SJT receives ${sjt0 ? 'zero weight at every frontier point, as in the paper' : 'non-zero weight somewhere on the frontier, unlike the paper'}.</p>
       <div class="table-scroll" style="max-height:420px"><table><thead><tr><th>Point</th><th>Paper AI</th><th>Paper validity</th><th>Tool validity</th><th>|&Delta;|</th><th class="l">Paper weights (BIO GMA CON SI INT SJT)</th><th class="l">Tool weights</th><th>max |&Delta; w|</th><th>From paper weights: r / AI</th><th class="l">Result</th></tr></thead><tbody>${rows}</tbody></table></div>`;
     return { ok, html: checkBlock('t5', 2, 'Known-answer test: Berry et al. (2024) Table 5', 'Does the optimiser reproduce the updated meta-analytic frontier?', statusPill(ok, `${pass} of 21 within tolerance`), body) };
@@ -2320,18 +2369,107 @@ if (typeof module !== 'undefined' && module.exports) module.exports = PO;
     });
     const vs = PO.validateModel(Object.assign(subModel(S.model, sel), { s: 1 }), sel, null);
     add('Selection ratio 100%', 'Rejected (must be 1% to 99%)', vs.errors.join(' ') || 'Accepted', !vs.ok);
+    // Hand-scored pool cases. Ties: 20 rows, 2 clear passes, 6 identical at 55, 12 below; 15% of 20 = 3 places.
+    {
+      const tv = (i) => (i < 2 ? 60 + i : i < 8 ? 55 : 40 - i / 10);
+      const tp = loadPool(base(20, (i) => rowOf('T' + i, i % 2 ? 'Focal' : 'Reference', codes.map(() => tv(i).toFixed(1)), 50)), 'ties.csv', codes);
+      const tr = scorePool(tp, sel, {}, w, 0.15, S.model.pFocal);
+      add('Hand-scored pool: six applicants tied at the cut-off', 'Warning naming the tied applicants; tied rows marked in the table and download',
+        tr.ties ? `Warned: ${tr.ties.n} tied, ${tr.ties.inSel} inside the top ${tr.k} by file order, ${tr.ties.out} outside; marked in download` : (tr.error || 'No warning'),
+        !!tr.ties && tr.ties.n === 6 && tr.ties.inSel === 1 && /tied at cut-off/.test(rankedCSV(tp, tr)));
+    }
+    const ex = examplePoolText(S.model, 1000, 20241611);
+    if (ex) {
+      const flipC = sel[0], fi = 2 + codes.indexOf(flipC);
+      const exClean = run(ex, 'example.csv');
+      add('Hand-scored pool: correctly keyed example pool', 'No direction warning (no false alarm)', (exClean.reversed || []).length ? exClean.reversed.map((x) => x.code).join(', ') + ' flagged' : 'No warning', !exClean.error && !(exClean.reversed || []).length);
+      const flipped = ex.split('\n').map((l, j) => { if (!j) return l; const c = l.split(','); c[fi] = (100 - Number(c[fi])).toFixed(1); return c.join(','); }).join('\n');
+      const rr = run(flipped, 'reversed.csv');
+      const hit = (rr.reversed || []).find((x) => x.code === flipC);
+      add(`Hand-scored pool: ${flipC} column reverse-keyed`, `Error naming ${flipC} as possibly reverse-keyed`, hit ? hit.msg : (rr.error || 'No warning'), !!hit && (rr.reversed || []).length === 1);
+      const ep = loadPool(ex, 'example.csv', codes);
+      const nOk = scorePool(ep, sel, { [flipC]: { mean: 50, sd: 10, auto: false } }, w, S.model.s, S.model.pFocal);
+      const nBad = scorePool(ep, sel, { [flipC]: { mean: 100, sd: 15, auto: false } }, w, S.model.s, S.model.pFocal);
+      const okT = noteText(nOk, new RegExp(flipC + ' norms')), badT = noteText(nBad, new RegExp(flipC + ' norms'));
+      add(`Hand-scored pool: ${flipC} T-scores entered with IQ-style norms (mean 100, SD 15)`, 'Warning that the norms do not fit; none with matching norms (50, 10)', badT ? badT.trim() + (okT ? ' (also warned with matching norms)' : '') : 'No warning', !!badT && !okT);
+    }
     const pass = cases.filter((c) => c.pass).length, ok = pass === cases.length;
     const body = `<p class="small">Each case runs automatically against the current battery (${sel.join(', ')}) and shows the message a user would see.</p>
       <div class="table-scroll"><table class="edge"><thead><tr><th class="l">Case</th><th class="l">Expected</th><th class="l">What the user sees</th><th class="l">Result</th></tr></thead><tbody>
       ${cases.map((c) => `<tr><td class="txt">${esc(c.name)}</td><td class="l txt">${esc(c.expect)}</td><td class="l txt">${esc(c.got)}</td><td class="l">${c.pass ? '<span class="yes">Pass</span>' : pill('bad', 'Fail')}</td></tr>`).join('')}</tbody></table></div>`;
     return { ok, html: checkBlock('edge', 8, 'Edge cases', 'Bad inputs fail safely with a clear message', statusPill(ok, `${pass} of ${cases.length} pass`), body) };
   }
+  // Configuration stress tests on the Berry et al. preset library, independent of the Dashboard battery.
+  function checkStress() {
+    const lib = modelFromPreset(presetById('berry')), codes = lib.codes, K = codes.length;
+    const subsets = [];
+    for (let mask = 1; mask < (1 << K); mask++) { const c = codes.filter((_, i) => mask & (1 << i)); if (c.length >= 2) subsets.push(c); }
+    // (a) Positive-definiteness gate: every battery from the library passes, and a broken cell is blocked in each.
+    let pdPass = 0, blocked = 0, minEig = Infinity;
+    subsets.forEach((c) => {
+      const sm = subModel(lib, c), v = PO.validateModel(sm, c, sm.R);
+      if (v.ok) pdPass++; minEig = Math.min(minEig, v.minEig);
+      const bad = clone(sm); bad.R[0][1] = bad.R[1][0] = 1.05;
+      if (c.length >= 3) { bad.R[0][1] = bad.R[1][0] = 0.95; bad.R[0][2] = bad.R[2][0] = 0.95; bad.R[1][2] = bad.R[2][1] = -0.95; }
+      if (!PO.validateModel(bad, c, sm.R).ok) blocked++;
+    });
+    const pdOK = pdPass === subsets.length && blocked === subsets.length;
+    // (b) Battery size 2 to 7: exact frontier against a brute-force grid and 20,000 random weightings.
+    const steps = { 2: 400, 3: 100, 4: 50, 5: 20, 6: 12, 7: 10 };
+    const sizeRows = [];
+    for (let k = 2; k <= K; k++) {
+      const c = codes.slice(0, k), ctx = PO.prepare(subModel(lib, c));
+      const t0 = performance.now(), Fv = PO.frontier(ctx, 'validity'), ms = performance.now() - t0;
+      const Gd = PO.gridFrontier(ctx, steps[k], 'validity');
+      let gAbove = -Infinity; Gd.front.forEach((g) => { const y = PO.frontYAt(Fv, g.ai); if (isFinite(y)) gAbove = Math.max(gAbove, g.rXY - y); });
+      const u = PO.rng(100 + k); let rAbove = -Infinity;
+      for (let i = 0; i < 20000; i++) {
+        const w = c.map(() => (u() < 0.3 ? 0 : -Math.log(u() + 1e-12))); if (!w.some((v) => v > 0)) continue;
+        const e = PO.evaluate(ctx, w), y = PO.frontYAt(Fv, e.ai); if (isFinite(y)) rAbove = Math.max(rAbove, e.rXY - y);
+      }
+      const nonneg = Fv.front.every((p) => p.b.every((v) => v >= -1e-12) && Math.abs(p.b.reduce((a, v) => a + v, 0) - 1) < 1e-9);
+      const ok = gAbove <= 0.002 && rAbove <= 0.002 && nonneg && Fv.front.length > 1;
+      sizeRows.push({ k, c, ms, pts: Fv.front.length, grid: Gd.pts.length, step: steps[k], gAbove, rAbove, ok });
+    }
+    const sizeOK = sizeRows.every((r) => r.ok);
+    // (c) Extreme selection ratio and focal share, on the default four-predictor battery.
+    const vals = [0.01, 0.05, 0.50, 0.95, 0.99], four = presetById('berry').select, ext = [];
+    vals.forEach((s) => vals.forEach((pf) => {
+      const ctx = PO.prepare(Object.assign(subModel(lib, four), { s, pFocal: pf })), Fq = PO.frontier(ctx, 'quality');
+      const fin = Fq.front.length > 0 && Fq.front.every((p) => isFinite(p.ai) && isFinite(p.q) && isFinite(p.rXY) && p.ai > 0);
+      const e = PO.evaluate(ctx, four.map(() => 1 / four.length));
+      const rate = Math.abs(e.SMaj * ctx.pMaj + e.SMin * ctx.pMin - s) < 1e-6;
+      ext.push({ s, pf, ok: fin && rate && isFinite(e.ai), ai: e.ai, q: e.q, n: Fq.front.length });
+    }));
+    // AI ratio should rise towards 1 as the selection ratio rises (fixed focal share 50%).
+    const mono = vals.map((s) => ext.find((x) => x.s === s && x.pf === 0.5).ai);
+    const monoOK = mono.every((v, i) => !i || v >= mono[i - 1] - 1e-9);
+    const extOK = ext.every((x) => x.ok) && monoOK;
+    const ok = pdOK && sizeOK && extOK;
+    const body = `<p class="small" style="max-width:85ch">Runs on the Berry et al. (2024) preset library, whatever is set on the Dashboard.</p>
+      <h3>a. Positive-definiteness gate across predictor swaps</h3>
+      <p class="small">All ${int(subsets.length)} batteries of two to seven predictors from the library were validated. ${pdPass} of ${subsets.length} pass (smallest eigenvalue ${minEig.toFixed(3)}). In each battery a deliberately impossible correlation pattern was then entered, and ${blocked} of ${subsets.length} were blocked. ${pdOK ? pill('good', 'Pass') : pill('bad', 'Fail')}</p>
+      <h3>b. Battery size two to seven</h3>
+      <div class="table-scroll"><table><thead><tr><th>Size</th><th class="l">Battery</th><th>Frontier time (ms)</th><th>Frontier points</th><th>Grid (step)</th><th>Grid above frontier</th><th>Random above frontier</th><th class="l">Result</th></tr></thead><tbody>
+        ${sizeRows.map((r) => `<tr><td>${r.k}</td><td class="l txt">${r.c.join(', ')}</td><td>${r.ms.toFixed(0)}</td><td>${r.pts}</td><td>${int(r.grid)} (1/${r.step})</td><td>${fmtQ(r.gAbove, 4)}</td><td>${fmtQ(r.rAbove, 4)}</td><td class="l">${r.ok ? '<span class="yes">Pass</span>' : pill('bad', 'Fail')}</td></tr>`).join('')}
+      </tbody></table></div>
+      <p class="small muted">Pass means no grid or random weighting lies more than .002 above the exact frontier, all frontier weights are non-negative and sum to 1, and the frontier has more than one point.</p>
+      <h3>c. Extreme selection ratio and focal share</h3>
+      <p class="small">${ext.filter((x) => x.ok).length} of ${ext.length} combinations of selection ratio and focal share (each of 1%, 5%, 50%, 95%, 99%) give finite results with the pooled selection rate equal to the selection ratio. At a 50% focal share the AI ratio under equal weights ${monoOK ? 'rises steadily' : 'does not rise steadily'} as the selection ratio rises: ${mono.map((v) => fmtP(v, 3)).join(', ')}. ${extOK ? pill('good', 'Pass') : pill('bad', 'Fail')}</p>
+      <div class="table-scroll"><table><thead><tr><th>Selection ratio</th>${vals.map((v) => `<th>Focal ${pct(v)}</th>`).join('')}</tr></thead><tbody>
+        ${vals.map((s) => `<tr><td>${pct(s)}</td>${vals.map((pf) => { const x = ext.find((e) => e.s === s && e.pf === pf); return `<td>${x.ok ? fmtP(x.ai, 3) : 'fail'}</td>`; }).join('')}</tr>`).join('')}
+      </tbody></table></div>
+      <p class="small muted">Cells show the AI ratio under equal weights.</p>`;
+    const n = [pdOK, sizeOK, extOK].filter(Boolean).length;
+    CK.stress = { pdPass, blocked, nSub: subsets.length, minEig, sizeRows, ext, mono, monoOK, pdOK, sizeOK, extOK };
+    return { ok, html: checkBlock('stress', 9, 'Configuration stress tests', 'Does the engine hold up across batteries, sizes and extreme settings?', statusPill(ok, `${n} of 3 pass`), body) };
+  }
   function runChecks() {
     if (!S.ctx || !effW()) { $('#checks-body').innerHTML = '<p>Set at least one weight above zero on the Dashboard first.</p>'; return; }
     $('#checks-body').innerHTML = '<p class="muted">Running checks&hellip;</p>';
     setTimeout(() => {
       const tol = 0.01;
-      const out = [checkTable2(tol), checkTable5(tol), checkOptimiser(), checkMatrix(), checkRegression(), checkSimulation(), checkRoundTrip(), checkEdges()];
+      const out = [checkTable2(tol), checkTable5(tol), checkOptimiser(), checkMatrix(), checkRegression(), checkSimulation(), checkRoundTrip(), checkEdges(), checkStress()];
       CK.results = out;
       const passed = out.filter((o) => o.ok === true).length;
       $('#check-summary').innerHTML = pill(passed === out.length ? 'good' : 'warn', `${passed} of ${out.length} checks pass`) + out.map((o, i) => `<span class="chip">${i + 1} <b>${o.ok === true ? 'pass' : o.ok === false ? 'fail' : 'n/a'}</b></span>`).join('');
@@ -2428,7 +2566,7 @@ if (typeof module !== 'undefined' && module.exports) module.exports = PO;
     showTab(tab);
   }
   // Exposed for testing in the browser console.
-  window.PSP = { S, loadPool, scorePool, parseWeight, canToggle, showTab, setWeights, effW, current };
+  window.PSP = { S, CK, loadPool, scorePool, parseWeight, canToggle, showTab, setWeights, effW, current, runChecks };
   init();
 })();
 
